@@ -6,18 +6,20 @@ services:
     restart: on-failure
     ports:
       - "8080:8080"
-  hapi-fhir-mysql:
-    image: mysql:latest
-    container_name: hapi-fhir-mysql
-    #https://dev.mysql.com/doc/refman/8.0/en/identifier-case-sensitivity.html
-    command: --lower_case_table_names=1
-    restart: always
+    depends_on:
+      - "sqlserver"
+  sqlserver:
+    container_name: "sqlserver"
+    image: mcmoe/mssqldocker
+    ports:
+      - "1444:1433"
     environment:
-      MYSQL_DATABASE: 'hapi'
-      MYSQL_USER: 'admin'
-      MYSQL_PASSWORD: 'admin'
-      MYSQL_ROOT_PASSWORD: 'admin'
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Majubersama79."
+      MSSQL_DB: "hapi"
+      MSSQL_USER: "tujuhsembilan"
+      MSSQL_PASSWORD: "Majubersama79."
     volumes:
-      - hapi-fhir-mysql:/var/lib/mysql
+      - "sqlserverdata:/var/opt/mssql"
 volumes:
-  hapi-fhir-mysql:
+  sqlserverdata:
